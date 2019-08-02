@@ -62,6 +62,34 @@ class BaseSettings(object, metaclass=ABCMeta):
         """
         pass # override in subclass
 
+class AttnSettings(BaseSettings):
+    """
+    Console interface for file translation mode
+    """
+
+    def _add_console_arguments(self):
+        super(AttnSettings, self)._add_console_arguments()
+
+        if self._from_console_arguments:
+            # don't open files if no console arguments are parsed
+            self._parser.add_argument(
+                '-s', '--src', type=str, metavar='PATH',
+                help="input file for src sentences")
+
+            self._parser.add_argument(
+                '-t', '--tgt', type=str, metavar='PATH',
+                help="input file for target sentences")
+
+            self._parser.add_argument(
+                '-o', '--output', type=argparse.FileType('wb'),
+                default=sys.stdout, metavar='PATH',
+                help="output .pkl file for attention distribution.")
+
+
+    def _set_additional_vars(self):
+        self.request_id = uuid.uuid4()
+        self.num_processes = 1
+
 
 class TranslationSettings(BaseSettings):
     """
@@ -120,6 +148,7 @@ class TranslationSettings(BaseSettings):
     def _set_additional_vars(self):
         self.request_id = uuid.uuid4()
         self.num_processes = 1
+
 
 class ServerSettings(BaseSettings):
     """

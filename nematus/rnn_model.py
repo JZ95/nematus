@@ -241,6 +241,7 @@ class Decoder(object):
         layer = layers.RecurrentLayer(initial_state=init_state_att_ctx,
                                       step_fn=step_fn)
         states, attended_states, attention_weights = layer.forward((gates_x, proposal_x))
+        self.attention_weights = attention_weights
 
         if self.high_gru_stack != None:
             states = self.high_gru_stack.forward(
